@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum DimensionType {
+  INTERNAL // D1: Interna — Fundamento (quién eres)
+  BUSINESS // D2: Negocio — Estructura (cómo operás)
+  GROWTH   // D3: Crecimiento — Expansión (hasta dónde podés llegar)
+}
+
+enum SubdimensionType {
+  SPIRITUAL   // Sub1:  Relación con Dios         → D1
+  PERSONAL    // Sub2:  Personal                  → D1
+  RELATIONAL  // Sub3:  Relacional                → D1
+  PURPOSE     // Sub4:  Propósito y Visión        → D2
+  FINANCIAL   // Sub5:  Financiera                → D2
+  SALES       // Sub6:  Ventas                    → D2
+  OPERATIONS  // Sub7:  Operación                 → D2
+  MARKETING   // Sub8:  Marketing                 → D2
+  LEADERSHIP  // Sub9:  Liderazgo y Equipo        → D3
+  PLANNING    // Sub10: Planificación y Crecimiento → D3
+}
+
+// Escala de Madurez
+enum MaturityLevel {
+  CRITICO    // 1.0 – 3.9 | Alerta Roja
+  RIESGO     // 4.0 – 5.9 | Área inestable
+  ESTABLE    // 6.0 – 7.9 | Funciona pero estancado
+  COMPETENTE // 8.0 – 9.9 | Base sólida
+  EXCELENTE  // 10.0      | Fortaleza clave
+}
+
+// =============================================================================
+// IDENTITY
+// =============================================================================
+
+model User {
+  id                String          @id @default(uuid())
+  email             String          @unique
+  password          String
+  name              String?
+  businessName      String?
+  country           String?
+  countryCode       String?
+  city              String?
+  phoneNumber       String?
+  avatarUrl         String?
+  timezone          String?         @default("America/New_York")
+  isProfileComplete Boolean         @default(false)
+  isEmailVerified   Boolean         @default(false)
+  verificationCode  String?
+  resetCode         String?
+  resetCodeExpires  DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+  attempts          SurveyAttempt[]
+  userRoles         UserRole[]
+}
+
+model Role {
+  id    String     @id @default(uuid())
+  name  String     @unique
+  users UserRole[]
+}
+
+model UserRole {
+  id     String @id @default(uuid())
+  userId String
+  roleId String
+  user   User   @relation(fields: [userId], references: [id])
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@unique([userId, roleId])
+}
+
+// =============================================================================
+// SURVEY
+// =============================================================================
+
+model Survey {
+  id          String          @id @default(uuid())
+  title       String
+  isActive    Boolean         @default(true)
+  description String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  sections    Section[]
+  attempts    SurveyAttempt[]
+}
+
+model Section {
+  id          String        @id @default(uuid())
+  surveyId    String
+  title       String
+  description String?
+  order       Int
+  dimension   DimensionType
+  survey      Survey        @relation(fields: [surveyId], references: [id])
+  questions   Question[]
+
+  @@unique([surveyId, order])
+  @@index([title])
+}
+
+model Question {
+  id           String           @id @default(uuid())
+  sectionId    String
+  text         String
+  order        Int
+  dimension    DimensionType
+  subdimension SubdimensionType
+  answers      Answer[]
+  section      Section          @relation(fields: [sectionId], references: [id])
+
+  @@index([dimension])
+  @@index([subdimension])
+  @@index([sectionId])
+}
+
+// =============================================================================
+// ATTEMPT
+// =============================================================================
+
+model SurveyAttempt {
+  id         String            @id @default(uuid())
+  userId     String?
+  surveyId   String
+  status     String            @default("IN_PROGRESS")
+  startedAt  DateTime          @default(now())
+  endedAt    DateTime?
+  deletedAt  DateTime?
+  reminderSentAt DateTime?
+  answers    Answer[]
+  diagnostic DiagnosticResult?
+  aiEval     AiEvaluation?
+  survey     Survey            @relation(fields: [surveyId], references: [id])
+  user       User?             @relation(fields: [userId], references: [id])
+}
+
+model Answer {
+  id         String        @id @default(uuid())
+  attemptId  String
+  questionId String
+  value      Int // 1-10
+  attempt    SurveyAttempt @relation(fields: [attemptId], references: [id])
+  question   Question      @relation(fields: [questionId], references: [id])
+
+  @@unique([attemptId, questionId])
+}
+
+// =============================================================================
+// RESULTS
+// =============================================================================
+
+model DiagnosticResult {
+  id        String        @id @default(uuid())
+  attemptId String        @unique
+
+  // --- Subdimension scores (promedio de sus 3 preguntas) ---
+  scoreSpiritual  Float // Sub1:  Relación con Dios
+  scorePersonal   Float // Sub2:  Personal
+  scoreRelational Float // Sub3:  Relacional
+  scorePurpose    Float // Sub4:  Propósito y Visión
+  scoreFinancial  Float // Sub5:  Financiera
+  scoreSales      Float // Sub6:  Ventas
+  scoreOperations Float // Sub7:  Operación
+  scoreMarketing  Float // Sub8:  Marketing
+  scoreLeadership Float // Sub9:  Liderazgo y Equipo
+  scorePlanning   Float // Sub10: Planificación y Crecimiento
+
+  // --- Dimension scores ---
+  scoreD1 Float // Promedio(Sub1, Sub2, Sub3)
+  scoreD2 Float // Promedio(Sub4, Sub5, Sub6, Sub7, Sub8)
+  scoreD3 Float // Promedio(Sub9, Sub10)
+  scoreIG Float // Índice Global: Promedio(D1, D2, D3)
+
+  // --- clasificación de madurez ---
+  maturityD1     MaturityLevel
+  maturityD2     MaturityLevel
+  maturityD3     MaturityLevel
+  maturityGlobal MaturityLevel
+
+  // --- Motor de Inferencia Cruzada (alertas diagnósticas) ---
+  // Regla 1: D1<=5 AND D2>=7 → "El Techo de Cristal"
+  alertGlassCeiling    Boolean @default(false)
+  // Regla 2: Sub6>=7 AND Sub5<=5 → "El Cubo Agujereado"
+  alertLeakyBucket     Boolean @default(false)
+  // Regla 3: Sub8>=7 AND Sub7<=5 → "Riesgo de Colapso por Éxito"
+  alertSuccessCollapse Boolean @default(false)
+  // Regla 4: Sub7>=7 AND Sub9<=5 → "Síndrome del Autoempleado"
+  alertSelfEmployed    Boolean @default(false)
+
+  attempt SurveyAttempt @relation(fields: [attemptId], references: [id])
+}
+
+model AiEvaluation {
+  id        String        @id @default(uuid())
+  attemptId String        @unique
+  content   String
+  createdAt DateTime      @default(now())
+  attempt   SurveyAttempt @relation(fields: [attemptId], references: [id])
+}
+
+model EvolutionAnalysis {
+  id                String   @id @default(uuid())
+  currentAttemptId  String
+  previousAttemptId String
+  content           String   // JSON del EvolutionAnalysisDTO
+  createdAt         DateTime @default(now())
+
+  @@unique([currentAttemptId, previousAttemptId])
+}

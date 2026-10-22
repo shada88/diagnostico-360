@@ -1,0 +1,665 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DESIGN TOKENS — Dark mode (default) — Black & Gold Premium
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Space — El Espacio: negro ébano con matiz azul noche */
+  --bg-space:       #070710;
+  --bg-surface:     #0E0E1A;
+  --bg-elevated:    #13131F;
+
+  /* Gold — El Brillo: dorado/bronce del logo Acme Consultores */
+  --gold:           #C9A84C;
+  --gold-bright:    #E8C665;
+  --gold-dim:       #7A5F1A;
+  --gold-glow:      rgba(201, 168, 76, 0.35);
+  --gold-glow-soft: rgba(201, 168, 76, 0.15);
+
+  /* Text — Blanco perla (nunca #FFFFFF puro) */
+  --text-pearl:     #F0EDE8;
+  --text-soft:      #B8B3C0;
+  --text-muted:     #6E6A7A;
+
+  /* Border — Metal pulido con baja opacidad */
+  --border:         rgba(201, 168, 76, 0.18);
+  --border-hover:   rgba(201, 168, 76, 0.45);
+
+  /* Surface tints — subtle backgrounds / borders (white-on-dark) */
+  --surface-subtle: rgba(255, 255, 255, 0.04);
+  --surface-dim:    rgba(255, 255, 255, 0.06);
+  --surface-mid:    rgba(255, 255, 255, 0.08);
+  --surface-raised: rgba(255, 255, 255, 0.10);
+
+  /* Glass morphism */
+  --glass-bg: rgba(14, 14, 26, 0.75);
+
+  /* Overlays — always dark (modal/drawer backdrops dim the content) */
+  --overlay-soft:   rgba(7, 7, 16, 0.72);
+  --overlay-medium: rgba(7, 7, 16, 0.85);
+  --overlay-hard:   rgba(7, 7, 16, 0.92);
+  --overlay-full:   rgba(7, 7, 16, 0.96);
+
+  /* Tooltips — always dark background, always light text (no light-mode override) */
+  --tooltip-bg:      rgba(14, 14, 26, 0.97);
+  --tooltip-text:    #F0EDE8;
+  --shadow-tooltip:  0 8px 32px rgba(0, 0, 0, 0.7);
+  --tooltip-divider: rgba(255, 255, 255, 0.1);
+
+  /* maturity levels — versión oscura/muted (para backgrounds y badges decorativos) */
+  --critico:        #8B1A1A;
+  --riesgo:         #C65D00;
+  --estable:        #8B7500;
+  --competente:     #B8860B;
+  --excelente:      #FFD700;
+
+  /* maturity foreground — versión viva (para texto, iconos y gráficos en el dashboard) */
+  --critico-fg:     #E05252;
+  --riesgo-fg:      #D4853A;
+  --estable-fg:     var(--gold);   /* #C9A84C — el nivel Estable es el nivel dorado */
+  --competente-fg:  #8CC98A;
+  --excelente-fg:   #5BA87A;
+  --excelente-dark: #3D7A59;       /* tono oscuro para labels sobre fondos claros */
+  --mejora-fg:      #5B9BD5;       /* azul — Área de Mejora en hallazgos */
+
+  /* Alert semánticas — tokens combinados para Module2Alert y estados de error */
+  --alert-critical-fg:     var(--critico-fg);
+  --alert-critical-bg:     rgba(139, 26, 26, 0.07);
+  --alert-critical-border: rgba(139, 26, 26, 0.40);
+
+  --alert-warning-fg:      var(--riesgo-fg);
+  --alert-warning-bg:      rgba(198, 93, 0, 0.06);
+  --alert-warning-border:  rgba(198, 93, 0, 0.30);
+
+  --alert-success-fg:      var(--excelente-fg);
+  --alert-success-bg:      rgba(91, 168, 122, 0.05);
+
+  --alert-mejora-fg:       var(--mejora-fg);
+  --alert-mejora-bg:       rgba(91, 155, 213, 0.06);
+  --alert-mejora-border:   rgba(91, 155, 213, 0.30);
+  --alert-success-border:  rgba(91, 168, 122, 0.25);
+
+  /* Gold opacity surfaces — reemplaza rgba(201,168,76,0.XX) hardcodeados */
+  /* Referencia rápida:
+     --gold-glow-soft = 0.15 (ya definido arriba)
+     --gold-glow      = 0.35 (ya definido arriba)
+     --border         = 0.18 (ya definido arriba)
+     --border-hover   = 0.45 (ya definido arriba)                          */
+  --gold-04:  rgba(201, 168, 76, 0.04);   /* fondo ultra-sutil             */
+  --gold-05:  rgba(201, 168, 76, 0.05);   /* fondo sutil (tarjetas DOFA)   */
+  --gold-06:  rgba(201, 168, 76, 0.06);   /* fondo estado activo sutil     */
+  --gold-08:  rgba(201, 168, 76, 0.08);   /* borde suave / track SVG       */
+  --gold-10:  rgba(201, 168, 76, 0.10);   /* fondo de iconos badge         */
+  --gold-12:  rgba(201, 168, 76, 0.12);   /* fondo activo / separadores    */
+  --gold-20:  rgba(201, 168, 76, 0.20);   /* borde medio / divisor visible */
+  --gold-25:  rgba(201, 168, 76, 0.25);   /* borde tooltip / badge         */
+  --gold-30:  rgba(201, 168, 76, 0.30);   /* borde activo hover            */
+  --gold-40:  rgba(201, 168, 76, 0.40);   /* borde fuerte / glow contenido */
+
+  /* Radar chart grid — subtle in dark, bolder in light for visibility */
+  --radar-grid: rgba(255, 255, 255, 0.10);
+
+  /* Compatibility aliases */
+  --primary:        var(--gold);
+  --accent:         var(--gold);
+  --bg-page:        var(--bg-space);
+  --bg-card:        var(--bg-surface);
+  --text-main:      var(--text-pearl);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT MODE — adapts to the browser / OS preference automatically
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Backgrounds — warm parchment / cream */
+    --bg-space:    #F7F5F0;
+    --bg-surface:  #FFFFFF;
+    --bg-elevated: #F0EDE6;
+
+    /* Gold — unchanged (brand identity, used decoratively) */
+
+    /* Text — warm dark tones */
+    --text-pearl:  #1A1814;
+    --text-soft:   #4A4540;
+    --text-muted:  #8A8580;
+
+    /* Border — more visible gold on light background */
+    --border:       rgba(201, 168, 76, 0.28);
+    --border-hover: rgba(201, 168, 76, 0.60);
+
+    /* Surface tints — dark-on-light (inverse of dark mode) */
+    --surface-subtle: rgba(0, 0, 0, 0.03);
+    --surface-dim:    rgba(0, 0, 0, 0.05);
+    --surface-mid:    rgba(0, 0, 0, 0.08);
+    --surface-raised: rgba(0, 0, 0, 0.10);
+
+    /* Glass — frosted white */
+    --glass-bg: rgba(255, 255, 255, 0.88);
+
+    /* Aliases */
+    --bg-page:  var(--bg-space);
+    --bg-card:  var(--bg-surface);
+    --text-main: var(--text-pearl);
+
+    /* Mejora — Área de Mejora (azul oscuro para contraste en fondo claro) */
+    --mejora-fg: #050A30;
+
+    /* Radar grid — stronger contrast against light backgrounds */
+    --radar-grid: rgba(0, 0, 0, 0.18);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+body {
+  background-color: var(--bg-space);
+  color: var(--text-pearl);
+  font-family: var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.025em;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TYPOGRAPHY — Escala jerárquica unificada (basada en DISEÑO_UX_UI.md)
+   ─────────────────────────────────────────────────────────────────────────────
+   Serif  → var(--font-playfair)  Playfair Display  (títulos, display)
+   Sans   → var(--font-inter)     Inter              (cuerpo, UI)
+
+   Escala de tamaños:
+     .text-hero         clamp(2.5–4.5rem)   Playfair 700   H1 landing
+     .text-display-lg   1.75rem  (28px)     Playfair 800   Secciones grandes
+     .text-module-title 1.25rem  (20px)     Playfair 900   H2 módulos dashboard
+     .text-card-title   1rem     (16px)     Inter    700   H3 dentro de tarjetas
+     .text-body         0.875rem (14px)     Inter    400   Párrafos
+     .text-caption      0.8125rem(13px)     Inter    400   Texto secundario
+     .section-label     0.6875rem(11px)     Inter    700   Labels de sección (UPPERCASE)
+     .text-micro        0.6875rem(11px)     Inter    700   Badges, pills, estados
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Alias Serif — mantiene retrocompatibilidad, úsalo para font-family solo */
+.font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* ── Hero — H1 de página principal ────────────────────────────────────────── */
+.text-hero {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+/* ── Display grande — encabezados de secciones principales ────────────────── */
+.text-display-lg {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.75rem;    /* 28px */
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* ── Module title — H2 unificado para todos los módulos del dashboard ──────── */
+/* Reemplaza la inconsistencia entre text-xl y text-2xl font-black             */
+.text-module-title {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.25rem;    /* 20px — equivale a text-xl */
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+/* ── Card title — H3 dentro de tarjetas y acordeones ──────────────────────── */
+.text-card-title {
+  font-size: 1rem;       /* 16px — equivale a text-base */
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* ── Body — párrafos y contenido principal ─────────────────────────────────── */
+.text-body {
+  font-size: 0.875rem;   /* 14px — equivale a text-sm */
+  line-height: 1.6;
+}
+
+/* ── Caption — texto secundario/descriptivo ────────────────────────────────── */
+/* Normaliza los text-[13px] dispersos → valor estándar del sistema            */
+.text-caption {
+  font-size: 0.8125rem;  /* 13px */
+  line-height: 1.5;
+}
+
+/* ── Section label — patrón más repetido en toda la app ────────────────────── */
+/* Reemplaza: className="text-xs font-bold uppercase tracking-widest"           */
+/*            + style={{ color: 'var(--text-muted)' }}                          */
+.section-label {
+  font-size: 0.6875rem;  /* 11px */
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* ── Micro — badges, pills, estados ────────────────────────────────────────── */
+/* Normaliza text-[10px] y text-[11px] → valor consistente del sistema         */
+.text-micro {
+  font-size: 0.6875rem;  /* 11px */
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLASSMORPHISM
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+}
+
+.glass-hover {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-hover:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 24px var(--gold-glow-soft);
+}
+
+/* Header background — adapts per theme */
+.header-bg {
+  background: rgba(14, 14, 26, 0.90);
+}
+
+@media (prefers-color-scheme: light) {
+  .header-bg {
+    background: rgba(255, 255, 255, 0.92);
+  }
+}
+
+[data-theme="light"] .header-bg { background: rgba(255, 255, 255, 0.92); }
+[data-theme="dark"]  .header-bg { background: rgba(14, 14, 26, 0.90); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT MODE — glass & card overrides for depth and readability
+   Glass on dark works via transparency + blur. On light it needs shadow.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-color-scheme: light) {
+  .glass {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(0, 0, 0, 0.09);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .glass-hover:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 8px 28px rgba(0,0,0,0.09), 0 0 20px var(--gold-glow-soft);
+  }
+  .module-card {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(0, 0, 0, 0.09);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .module-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 8px 28px rgba(0,0,0,0.09), 0 0 20px var(--gold-glow-soft);
+  }
+}
+
+[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.09);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.06);
+}
+[data-theme="light"] .glass-hover:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 8px 28px rgba(0,0,0,0.09), 0 0 20px var(--gold-glow-soft);
+}
+[data-theme="light"] .module-card {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.09);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.06);
+}
+[data-theme="light"] .module-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 8px 28px rgba(0,0,0,0.09), 0 0 20px var(--gold-glow-soft);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GOLD ACCENT UTILITIES
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Text color aliases — evitan style={{ color: 'var(--text-X)' }} inline */
+.text-pearl { color: var(--text-pearl); }
+.text-soft  { color: var(--text-soft);  }
+.text-muted { color: var(--text-muted); }
+.text-gold  { color: var(--gold); }
+.text-gold-bright { color: var(--gold-bright); }
+
+.border-gold { border-color: var(--border); }
+.border-gold-hover:hover { border-color: var(--border-hover); }
+
+.glow-gold {
+  box-shadow: 0 0 20px var(--gold-glow), 0 0 40px var(--gold-glow-soft);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPONENT UTILITIES — Patrones reutilizables
+   ─────────────────────────────────────────────────────────────────────────────
+   Estas clases encapsulan los patrones más repetidos del dashboard.
+   Evitar combinarlas con clases Tailwind que pisen las mismas propiedades.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Module card — envuelve cada módulo del dashboard ──────────────────────── */
+/* Reemplaza: glass glass-hover rounded-2xl p-6 md:p-8                         */
+.module-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+@media (min-width: 768px) {
+  .module-card { padding: 2rem; }
+}
+.module-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 24px var(--gold-glow-soft);
+}
+
+/* ── Gold border color utilities ────────────────────────────────────────────── */
+/* Usar con la clase Tailwind `border` que agrega width:1px y style:solid       */
+/* Reemplaza: style={{ borderColor: 'rgba(201,168,76,0.XX)' }}                  */
+.border-gold-xs { border-color: var(--gold-08); }
+.border-gold-sm { border-color: var(--gold-12); }
+.border-gold-md { border-color: var(--gold-20); }
+.border-gold-lg { border-color: var(--gold-30); }
+
+/* ── Dividers horizontales dorados ──────────────────────────────────────────── */
+/* Reemplaza: style={{ borderTop: '1px solid rgba(201,168,76,0.XX)' }}          */
+.divider-gold-xs { border-top: 1px solid var(--gold-08); }
+.divider-gold-sm { border-top: 1px solid var(--gold-12); }
+.divider-gold-md { border-top: 1px solid var(--gold-20); }
+
+/* ── Info block — contenedor de análisis/información dentro de módulos ──────── */
+/* Variante neutra */
+.info-block {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--surface-dim);
+}
+
+/* Variante dorada sutil (análisis de IA, resúmenes) */
+.info-block-gold {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: var(--gold-05);
+  border: 1px solid var(--gold-20);
+}
+
+/* Variante con acento lateral — destacar preguntas clave o CTAs */
+.info-block-gold-accent {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: var(--gold-05);
+  border: 1px solid var(--gold-20);
+  border-left: 3px solid var(--gold);
+}
+
+/* Variante verde — acción prioritaria / estado positivo */
+.info-block-success {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: var(--alert-success-bg);
+  border: 1px solid var(--alert-success-border);
+  border-left: 3px solid var(--excelente-fg);
+}
+
+/* ── Spinner dorado — estado de carga ───────────────────────────────────────── */
+/* Reemplaza: style={{ borderColor: 'var(--gold-dim)', borderTopColor: 'var(--gold)' }} */
+.spinner-gold {
+  border-color: var(--gold-dim);
+  border-top-color: var(--gold);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BUTTON — CTA Principal (fondo oscuro, borde dorado)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.btn-gold {
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.12), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.btn-gold:hover {
+  color: var(--gold-bright);
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+
+.btn-gold:hover::after {
+  transform: translateX(100%);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PROGRESS BAR — Línea dorada
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.progress-gold {
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-bright));
+  box-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   NAV LINK HOVER (CSS-only, Server Component safe)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.nav-link-muted {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+.nav-link-muted:hover {
+  color: var(--gold);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BREATHING ANIMATION — for CTA button
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1);     box-shadow: 0 0 20px var(--gold-glow); }
+  50%       { transform: scale(1.025); box-shadow: 0 0 35px var(--gold-glow), 0 0 60px var(--gold-glow-soft); }
+}
+
+.animate-breathe {
+  animation: breathe 3.5s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FORM INPUTS
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.input-dark {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-pearl);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-dark::placeholder {
+  color: var(--text-muted);
+}
+
+.input-dark:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-glow);
+}
+
+/* Override browser autofill — uses CSS variables so it adapts automatically */
+.input-dark:-webkit-autofill,
+.input-dark:-webkit-autofill:hover,
+.input-dark:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-surface) inset !important;
+  -webkit-text-fill-color: var(--text-pearl) !important;
+  border-color: var(--gold) !important;
+  caret-color: var(--text-pearl);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-surface) inset !important;
+  -webkit-text-fill-color: var(--text-pearl) !important;
+  caret-color: var(--text-pearl);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SCROLLBAR
+   ───────────────────────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-space); }
+::-webkit-scrollbar-thumb { background-color: var(--gold-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--gold); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLOWING / PULSING EFFECT FOR URGENT FINDINGS
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes urgent-glow {
+  0%, 100% {
+    box-shadow: 0 0 0px color-mix(in srgb, var(--glow-color) 0%, transparent);
+    border-color: color-mix(in srgb, var(--glow-color) 30%, transparent);
+  }
+  35%, 65% {
+    box-shadow: 0 0 15px color-mix(in srgb, var(--glow-color) 25%, transparent);
+    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+  }
+}
+
+.animate-urgent-glow {
+  animation: urgent-glow 6s infinite ease-in-out;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PRINT
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media print {
+  @page { margin: 1.5cm; }
+  body {
+    background-color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color: black !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .no-print { display: none !important; }
+  .print-safe {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 2rem !important;
+  }
+  main {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EXPLICIT THEME OVERRIDES — user choice wins over OS preference
+   Place AFTER media queries so cascade order guarantees they win.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root[data-theme="light"] {
+  --bg-space:    #F7F5F0;
+  --bg-surface:  #FFFFFF;
+  --bg-elevated: #F0EDE6;
+
+  --text-pearl:  #1A1814;
+  --text-soft:   #4A4540;
+  --text-muted:  #8A8580;
+
+  --border:       rgba(201, 168, 76, 0.28);
+  --border-hover: rgba(201, 168, 76, 0.60);
+
+  --surface-subtle: rgba(0, 0, 0, 0.03);
+  --surface-dim:    rgba(0, 0, 0, 0.05);
+  --surface-mid:    rgba(0, 0, 0, 0.08);
+  --surface-raised: rgba(0, 0, 0, 0.10);
+
+  --glass-bg: rgba(255, 255, 255, 0.88);
+
+  --radar-grid: rgba(0, 0, 0, 0.18);
+
+  --mejora-fg:  #050A30;
+
+  --bg-page:   var(--bg-space);
+  --bg-card:   var(--bg-surface);
+  --text-main: var(--text-pearl);
+}
+
+:root[data-theme="dark"] {
+  --bg-space:       #070710;
+  --bg-surface:     #0E0E1A;
+  --bg-elevated:    #13131F;
+
+  --text-pearl:     #F0EDE8;
+  --text-soft:      #B8B3C0;
+  --text-muted:     #6E6A7A;
+
+  --border:         rgba(201, 168, 76, 0.18);
+  --border-hover:   rgba(201, 168, 76, 0.45);
+
+  --surface-subtle: rgba(255, 255, 255, 0.04);
+  --surface-dim:    rgba(255, 255, 255, 0.06);
+  --surface-mid:    rgba(255, 255, 255, 0.08);
+  --surface-raised: rgba(255, 255, 255, 0.10);
+
+  --glass-bg: rgba(14, 14, 26, 0.75);
+
+  --radar-grid: rgba(255, 255, 255, 0.10);
+
+  --bg-page:   var(--bg-space);
+  --bg-card:   var(--bg-surface);
+  --text-main: var(--text-pearl);
+}

@@ -1,0 +1,79 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Next.js 16 (App Router, React 19, TypeScript, Tailwind v4, Framer Motion) in frontend/;
+    NestJS 11 + Prisma 5 + PostgreSQL in backend/; Google GenAI + Groq SDK for AI features
+  Architecture: Hexagonal/modular — backend modules: identity, diagnostic, ai, analytics, common;
+    frontend: App Router pages, components/features/dashboard/modules/
+  Testing: Jest (backend) via `cd backend && npm test`; no frontend test runner detected
+  Style: ESLint + Prettier (backend); ESLint (frontend); TypeScript strict (frontend), partial strict (backend)
+  Conventions: NestJS decorators, Prisma ORM, JWT + Passport auth, @nestjs/schedule for cron
+
+strict_tdd: false
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - Identify affected modules/packages
+  specs:
+    - Use Given/When/Then format for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group tasks by phase (infrastructure, implementation, testing)
+    - Use hierarchical numbering (1.1, 1.2, etc.)
+    - Keep tasks small enough to complete in one session
+  apply:
+    - Follow existing NestJS module patterns; co-locate module files
+    - Use Prisma for all DB access; no raw SQL
+    - Frontend: use App Router conventions, Tailwind for styling
+  verify:
+    - Run backend tests: cd backend && npm test
+    - Compare implementation against every spec scenario
+  archive:
+    - Warn before merging destructive deltas (large removals)
+
+testing:
+  strict_tdd: false
+  detected: "2026-04-17"
+
+  test_runner:
+    command: "cd backend && npm test"
+    framework: Jest (ts-jest)
+    watch: "cd backend && npm run test:watch"
+    coverage: "cd backend && npm run test:cov"
+    e2e: "cd backend && npm run test:e2e"
+
+  layers:
+    unit:
+      available: true
+      tool: Jest + ts-jest
+    integration:
+      available: true
+      tool: Jest + supertest (@nestjs/testing)
+    e2e:
+      available: true
+      tool: Jest (jest-e2e.json config) + supertest
+    frontend_unit:
+      available: false
+      note: No test runner in frontend (no vitest/jest in devDependencies)
+
+  quality_tools:
+    linter:
+      available: true
+      command: "cd backend && npm run lint"
+      tool: ESLint 9
+    formatter:
+      available: true
+      command: "cd backend && npm run format"
+      tool: Prettier 3
+    type_checker:
+      available: true
+      command: "cd backend && npx tsc --noEmit"
+      tool: TypeScript 5
+    frontend_lint:
+      available: true
+      command: "cd frontend && npm run lint"
+      tool: ESLint 9 + eslint-config-next

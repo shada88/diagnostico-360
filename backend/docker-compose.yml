@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  diag360-db:
+    image: postgres:15-alpine
+    container_name: diag360-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: diagnostico360
+    ports:
+      - "5436:5432"
+    volumes:
+      - diag360_db_data:/var/lib/postgresql/data
+
+volumes:
+  diag360_db_data:

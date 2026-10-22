@@ -1,0 +1,18 @@
+Copyright (c) 2026. All rights reserved.
+
+This repository is published solely for academic purposes and software quality
+evaluation. You may view and study the source code and clone it for personal
+review.
+
+Without prior written permission you may NOT:
+  - use this software, in whole or in part, in production or commercial settings;
+  - redistribute, sublicense or sell it;
+  - publish derivative works based on it.
+
+"Acme Consultores" and all brand references in this repository are fictitious.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE USE OF THE SOFTWARE. The software contains known,
+documented security vulnerabilities (see docs/SECURITY.md) and must not be
+deployed.
